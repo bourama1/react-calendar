@@ -1,17 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import { createLogger } from 'redux-logger'
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { App } from './components/App';
+import registerServiceWorker from './registerServiceWorker';
+import reducer from './reducers'
+
+const middleware = []
+if (process.env.NODE_ENV !== 'production') {
+  middleware.push(createLogger())
+}
+
+const store = createStore(
+  reducer,
+  applyMiddleware(...middleware)
+)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>
+  </Provider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+registerServiceWorker()
